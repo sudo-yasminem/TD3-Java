@@ -6,32 +6,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class WebServer extends WebServerApplication{
-    private void readRequest(Socket socket){
-        if(socket.isConnected()){
+        RequestProcessor process = new RequestProcessor(null);
+        public void start() {
             try {
-                InputStream input = socket.getInputStream();
-                System.out.println(input);
-            }
-            catch (Exception e) {
-                System.err.println("Erreur dans Readrequest");
-            }
+                ServerSocket serverSocket = new ServerSocket(8080);
+                while (true) {
+                    Socket socket = serverSocket.accept();
+                }
+                } catch (IOException e) {
+                    System.out.println("Erreur démarrage du serveur");
+                }
         }
-    }
-    
-    private void sendResponse(Socket socket){
-        try {
-            OutputStream output = socket.getOutputStream();
-            String response = "HTTP/1.1 200 OK\r\n" +
-                             "Content-Type: text/html\r\n" +
-                             "\r\n" +
-                             "<html><body></body></html>";
-            output.write(response.getBytes());
-            output.flush();
-            socket.close();
-        } catch (IOException e) {
-            System.err.println("Error sending response: " + e.getMessage());
-        }
-    }
 
     public void run(int portNumber){
         try {
@@ -40,8 +25,8 @@ public class WebServer extends WebServerApplication{
 
             while (true){
                 Socket clientSocket = serverSocket.accept();
-                readRequest(clientSocket);
-                sendResponse(clientSocket);
+                HttpContext context = new HttpContext();
+                //Thread thread = new Thread(new RequestProcessor(context));
             }
         } catch (IOException e) {
             System.err.println("Server error: " + e.getMessage());

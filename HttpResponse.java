@@ -1,19 +1,26 @@
-import java.io.BufferedWriter;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class HttpResponse extends HttpContext {
-    private BufferedWriter output;
+    private OutputStream output;
 
-    HttpResponse(Socket socket){
-        super(socket);
+    HttpResponse(Socket socket) throws IOException{
+        this.output = socket.getOutputStream();
     }
 
-    void ok(String message){
-      
+    public HttpResponse() {
+        //TODO Auto-generated constructor stub
     }
 
-    void notFound(String message){
-        
+    void ok() throws IOException{
+      output.write("200 OK \n".getBytes());
+
     }
+
+    void notFound(String message) throws IOException{
+        output.write("Error 404 \n".getBytes());
+    }
+
+    
 
 }
